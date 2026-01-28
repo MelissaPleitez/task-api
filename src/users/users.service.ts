@@ -3,12 +3,15 @@ import { CreateUserDto, UpdateUserDto } from './users.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { Profile } from './entities/profile.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(Profile)
+    private profilesRepository: Repository<Profile>,
   ) {}
 
   async findAllUsers() {
@@ -26,20 +29,6 @@ export class UsersService {
       throw new NotFoundException(`User with id ${id} not found `);
     }
     return user;
-  }
-
-  async findOneProfile(id: string) {
-    const user = await this.usersRepository.findOne({
-      where: { id: parseInt(id) },
-      relations: { profile: true },
-    });
-    if (!user) {
-      throw new NotFoundException(`profile with id ${id} not found `);
-    }
-    if (!user.profile) {
-      throw new NotFoundException(`Profile for user ${id} not found`);
-    }
-    return user.profile;
   }
 
   async createUser(user: CreateUserDto) {
@@ -71,5 +60,20 @@ export class UsersService {
     return {
       error: `User with id ${id} was deleted`,
     };
+  }
+
+  // PROFILE
+  async findOneProfile(id: string) {
+    const profile = await this.profilesRepository.findOne({
+      where: { id: parseInt(id) },
+      relations: {
+        user: true,
+      },
+    });
+    if (!profile) {
+      throw new NotFoundException(`profile with id ${id} not found `);
+    }
+
+    return profile;
   }
 }
