@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from './users.dto';
+import { CreateUserDto, UpdateUserDto } from './dtos/users.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -41,25 +41,34 @@ export class UsersService {
   }
 
   async UpdateUser(id: string, users: UpdateUserDto) {
-    const user = await this.usersRepository.findOneBy({ id: parseInt(id) });
-    if (!user) {
-      throw new NotFoundException(`User with id ${id} not found `);
+    try {
+      const user = await this.usersRepository.findOne({
+        where: { id: parseInt(id) },
+        relations: {
+          profile: true,
+        },
+      });
+      if (!user) {
+        throw new NotFoundException(`User with id ${id} not found `);
+      }
+      console.log(user);
+      const updatedUser = this.usersRepository.merge(user, users);
+      const saverUser = await this.usersRepository.save(updatedUser);
+      return saverUser;
+    } catch {
+      throw new BadRequestException('Error updating user');
     }
-
-    const updatedUser = this.usersRepository.merge(user, users);
-    await this.usersRepository.save(updatedUser);
-    return updatedUser;
   }
 
   async deleteUser(id: string) {
-    const user = await this.usersRepository.findOneBy({ id: parseInt(id) });
-    if (!user) {
-      throw new NotFoundException(`User with id ${id} not found `);
+    try {
+      await this.usersRepository.delete(id);
+      return {
+        error: `User with id ${id} was deleted`,
+      };
+    } catch {
+      throw new BadRequestException('Error deleting user');
     }
-    await this.usersRepository.delete(user.id);
-    return {
-      error: `User with id ${id} was deleted`,
-    };
   }
 
   // PROFILE
