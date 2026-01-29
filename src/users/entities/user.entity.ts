@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Profile } from './profile.entity';
+import { Task } from 'src/tasks/entities/task.entity';
 
 @Entity({
   name: 'users',
@@ -23,4 +24,8 @@ export class User {
   @OneToOne(() => Profile, { nullable: false, cascade: true })
   @JoinColumn({ name: 'profile_id' })
   profile: Profile;
+
+  @OneToMany(() => Task, (task) => task.user)
+  @JoinColumn({ name: 'task_id' })
+  tasks: Task[];
 }
