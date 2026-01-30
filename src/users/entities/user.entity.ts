@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, Prim
 import { Profile } from './profile.entity';
 import { Task } from 'src/tasks/entities/task.entity';
 import { Account } from 'src/accounts/entities/account.entity';
+import { Transaction as UserTransaction } from 'src/transactions/entities/transaction.entity';
 
 @Entity({
   name: 'users',
@@ -31,4 +32,7 @@ export class User {
 
   @OneToMany(() => Account, (account) => account.user)
   accounts: Account[];
+
+  @OneToMany(() => UserTransaction, (transaction) => transaction.user)
+  transactions: UserTransaction[];
 }

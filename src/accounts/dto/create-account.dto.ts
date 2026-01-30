@@ -14,5 +14,5 @@ export class CreateAccountDto {
 
   @IsString()
   @IsEnum(AccountType, { message: 'Type must be one of the following values: savings, bank, credit, cash' })
-  type: string;
+  type: AccountType;
 }
