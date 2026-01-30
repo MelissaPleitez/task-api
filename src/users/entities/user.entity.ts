@@ -30,5 +30,5 @@ export class User {
   tasks: Task[];
 
   @OneToMany(() => Account, (account) => account.user)
-  account: Account[];
+  accounts: Account[];
 }
