@@ -1,6 +1,5 @@
 import { User } from 'src/users/entities/user.entity';
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { UpdateDateColumn } from 'typeorm/browser';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({
   name: 'tasks',
@@ -18,7 +17,7 @@ export class Task {
   @Column({ type: 'varchar', length: 255, name: 'cover_pic', nullable: true })
   coverPic: string;
 
-  @Column({ type: 'varchar', default: false })
+  @Column({ type: 'varchar', default: 'pending' })
   status: string; //(pending | in_progress | done)
 
   @Column({ type: 'varchar' })
@@ -33,6 +32,10 @@ export class Task {
   @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'updated_at' })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.tasks)
+  @ManyToOne(() => User, (user) => user.tasks, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @Column({ name: 'user_id' })
+  userId: number;
 }

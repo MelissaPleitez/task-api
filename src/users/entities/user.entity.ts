@@ -26,6 +26,5 @@ export class User {
   profile: Profile;
 
   @OneToMany(() => Task, (task) => task.user)
-  @JoinColumn({ name: 'task_id' })
   tasks: Task[];
 }

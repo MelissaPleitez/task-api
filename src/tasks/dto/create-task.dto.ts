@@ -13,10 +13,10 @@ export class CreateTaskDto {
   @IsNotEmpty()
   category: string;
 
-  @IsEnum(['LOW', 'MEDIUM', 'HEIGH'], { message: 'Priority must be one of the following values: low, medium, high' })
+  @IsEnum(['LOW', 'MEDIUM', 'HEIGH'], { message: 'Priority must be one of the following values: LOW, MEDIUM, HEIGH' })
   priority: string;
 
-  @IsEnum(['PENDING', 'IN_PROGRESS', 'DONE'], { message: 'Status must be one of the following values: pending, in_progress, done' })
+  @IsEnum(['PENDING', 'IN_PROGRESS', 'DONE'], { message: 'Status must be one of the following values: PENDING, IN_PROGRESS, DONE' })
   status: string;
 
   @IsString()
