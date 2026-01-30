@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -38,19 +38,21 @@ export class AccountsService {
     }
   }
 
-  findOneAccount(id: number) {
-    try {
-      const account = this.accountsRepository.findOneBy({ id });
-      return account;
-    } catch {
-      throw new BadRequestException('Account not found');
+  async findOneAccount(id: string) {
+    const account = await this.accountsRepository.findOne({
+      where: { id: parseInt(id) },
+      relations: { user: true },
+    });
+    if (!account) {
+      throw new NotFoundException(`Account with id ${id} not found`);
     }
+    return account;
   }
 
-  async updateAccount(id: number, updateAccountDto: UpdateAccountDto) {
-    const account = await this.accountsRepository.findOneBy({ id });
+  async updateAccount(id: string, updateAccountDto: UpdateAccountDto) {
+    const account = await this.accountsRepository.findOneBy({ id: parseInt(id) });
     if (!account) {
-      throw new BadRequestException('Account not found');
+      throw new NotFoundException('Account not found');
     }
     try {
       const updatedAccount = this.accountsRepository.merge(account, updateAccountDto);
@@ -61,10 +63,12 @@ export class AccountsService {
     }
   }
 
-  removeAccount(id: number) {
+  async removeAccount(id: string) {
     try {
-      const account = this.accountsRepository.delete(id);
-      return account;
+      await this.accountsRepository.delete(id);
+      return {
+        error: `Account with id ${id} was deleted`,
+      };
     } catch {
       throw new BadRequestException('Error deleting finalcial account');
     }
