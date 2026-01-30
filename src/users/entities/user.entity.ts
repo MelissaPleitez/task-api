@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Profile } from './profile.entity';
 import { Task } from 'src/tasks/entities/task.entity';
+import { Account } from 'src/accounts/entities/account.entity';
 
 @Entity({
   name: 'users',
@@ -27,4 +28,7 @@ export class User {
 
   @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];
+
+  @OneToMany(() => Account, (account) => account.user)
+  account: Account[];
 }
