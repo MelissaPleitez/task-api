@@ -8,8 +8,8 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post(':id')
-  create(@Body() createTaskDto: CreateTaskDto, @Param('id') id: string) {
-    return this.tasksService.CreateTask(createTaskDto, id);
+  create(@Body() createTaskDto: CreateTaskDto) {
+    return this.tasksService.CreateTask(createTaskDto);
   }
 
   @Get()
@@ -30,5 +30,10 @@ export class TasksController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.tasksService.removeTask(+id);
+  }
+
+  @Get(':id/profile')
+  getTaskById(@Param('id') id: string) {
+    return this.tasksService.GetTasksByUserId(id);
   }
 }

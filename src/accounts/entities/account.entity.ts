@@ -13,7 +13,7 @@ export class Account {
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
-  @Column({ type: 'enum', length: 100, enum: AccountType })
+  @Column({ type: 'enum', enum: AccountType, nullable: true })
   type: AccountType;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })

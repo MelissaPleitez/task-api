@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateTaskDto {
   @IsString()
@@ -22,4 +22,8 @@ export class CreateTaskDto {
   @IsString()
   @IsOptional()
   coverPic?: string;
+
+  @IsInt()
+  @IsNotEmpty()
+  userId: number;
 }

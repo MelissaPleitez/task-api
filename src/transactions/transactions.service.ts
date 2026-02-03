@@ -59,7 +59,8 @@ export class TransactionsService {
     }
   }
 
-  removeTransaction(id: number) {
-    return `This action removes a #${id} transaction`;
+  async removeTransaction(id: string) {
+    await this.transactionsRepository.delete(parseInt(id));
+    return { message: `Transaction with id ${id} has been deleted` };
   }
 }

@@ -12,29 +12,33 @@ export class TasksService {
     private tasksRepository: Repository<Task>,
   ) {}
 
-  async CreateTask(createTaskDto: CreateTaskDto, id: string) {
-    try {
-      const task = this.tasksRepository.create(createTaskDto);
-      await this.tasksRepository.save({
-        ...task,
-        user: { id: parseInt(id) },
-      });
-      return task;
-    } catch {
-      throw new BadRequestException('Error creating task');
-    }
-  }
-
   async findAllTask() {
-    return await this.tasksRepository.find();
+    return await this.tasksRepository.find({
+      relations: ['user.profile'],
+    });
   }
 
   async findOneTask(id: number) {
-    const task = await this.tasksRepository.findOneBy({ id });
+    const task = await this.tasksRepository.findOne({
+      where: { id },
+      relations: ['user.profile'],
+    });
     if (!task) {
       throw new NotFoundException(`Task with id ${id} not found`);
     }
     return task;
+  }
+
+  async CreateTask(createTaskDto: CreateTaskDto) {
+    try {
+      const task = await this.tasksRepository.save({
+        ...createTaskDto,
+        user: { id: createTaskDto.userId },
+      });
+      return this.findOneTask(task.id);
+    } catch {
+      throw new BadRequestException('Error creating task');
+    }
   }
 
   async updateTask(id: number, updateTaskDto: UpdateTaskDto) {
@@ -57,6 +61,25 @@ export class TasksService {
       return { message: `Task with id ${id} deleted successfully` };
     } catch {
       throw new BadRequestException('Error deleting task');
+    }
+  }
+
+  //Getting tasks for a specific user
+  async GetTasksByUserId(userId: string) {
+    const id = Number(userId);
+    try {
+      const tasks = await this.tasksRepository.find({
+        where: { user: { id: id } },
+        relations: ['user.profile'],
+      });
+
+      if (tasks.length === 0) {
+        throw new NotFoundException(`No tasks found for user with id ${userId}`);
+      }
+      return tasks;
+    } catch (error) {
+      console.error('GetTasksByUserId error:', error);
+      throw new BadRequestException('Error fetching tasks for the user');
     }
   }
 }
