@@ -18,9 +18,9 @@ export class TasksService {
     });
   }
 
-  async findOneTask(id: number) {
+  async findOneTask(id: string) {
     const task = await this.tasksRepository.findOne({
-      where: { id },
+      where: { id: parseInt(id) },
       relations: ['user.profile'],
     });
     if (!task) {
@@ -35,7 +35,7 @@ export class TasksService {
         ...createTaskDto,
         user: { id: createTaskDto.userId },
       });
-      return this.findOneTask(task.id);
+      return this.findOneTask(task.id.toString());
     } catch {
       throw new BadRequestException('Error creating task');
     }
