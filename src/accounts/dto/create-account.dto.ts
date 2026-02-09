@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export enum AccountType {
   CASH = 'cash',
@@ -14,5 +14,9 @@ export class CreateAccountDto {
 
   @IsString()
   @IsEnum(AccountType, { message: 'Type must be one of the following values: savings, bank, credit, cash' })
-  type: AccountType;
+  accountType: AccountType;
+
+  @IsInt()
+  @IsNotEmpty()
+  userId: number;
 }

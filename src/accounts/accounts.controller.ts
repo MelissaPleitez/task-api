@@ -2,14 +2,15 @@ import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common'
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
+import { CreateAccountWithTransactionDto } from './dto/create-account-with-transaction.dto';
 
 @Controller('accounts')
 export class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
 
-  @Post(':id')
-  create(@Body() createAccountDto: CreateAccountDto, @Param('id') id: string) {
-    return this.accountsService.createAccount(createAccountDto, id);
+  @Post()
+  create(@Body() createAccountDto: CreateAccountDto) {
+    return this.accountsService.createAccount(createAccountDto);
   }
 
   @Get()
@@ -30,5 +31,10 @@ export class AccountsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.accountsService.removeAccount(id);
+  }
+
+  @Post('/transaction')
+  createAccountWithTransaction(@Body() countAndTransaction: CreateAccountWithTransactionDto) {
+    return this.accountsService.createAccountWithInitialTransaction(countAndTransaction);
   }
 }
