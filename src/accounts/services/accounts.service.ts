@@ -3,7 +3,7 @@ import { CreateAccountDto } from '../dto/create-account.dto';
 import { UpdateAccountDto } from '../dto/update-account.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Account } from '../entities/account.entity';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { Transaction as AccountTransaction } from '../entities/transaction.entity';
 import { CreateAccountWithTransactionDto } from '../dto/create-account-with-transaction.dto';
 
@@ -104,6 +104,28 @@ export class AccountsService {
     } catch (error) {
       console.log(error);
       throw new BadRequestException('Error creating account and transaction');
+    }
+  }
+
+  async getTransactionsByMonth(accountId: string, month: string) {
+    try {
+      console.log('si esta llegando: ', accountId, month);
+      const [year, monthNumber] = month.split('-').map(Number);
+      const startDate = new Date(year, monthNumber - 1, 1);
+      const endDate = new Date(year, monthNumber, 0, 23, 59, 59);
+
+      return this.transactionRepository.find({
+        where: {
+          account: { id: Number(accountId) },
+          date: Between(startDate, endDate),
+        },
+        order: {
+          date: 'ASC',
+        },
+      });
+    } catch (error) {
+      console.log('error: ', error);
+      throw new BadRequestException('Error getting transaction by date');
     }
   }
 

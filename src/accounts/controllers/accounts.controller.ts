@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query } from '@nestjs/common';
 import { AccountsService } from '../services/accounts.service';
 import { CreateAccountDto } from '../dto/create-account.dto';
 import { UpdateAccountDto } from '../dto/update-account.dto';
@@ -36,5 +36,10 @@ export class AccountsController {
   @Post('/transaction')
   createAccountWithTransaction(@Body() countAndTransaction: CreateAccountWithTransactionDto) {
     return this.accountsService.createAccountWithInitialTransaction(countAndTransaction);
+  }
+
+  @Get(':id/transactions')
+  getTransactionsByMonth(@Param('id') id: string, @Query('month') month: string) {
+    return this.accountsService.getTransactionsByMonth(id, month);
   }
 }
