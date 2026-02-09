@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateAccountDto } from './dto/create-account.dto';
-import { UpdateAccountDto } from './dto/update-account.dto';
+import { CreateAccountDto } from '../dto/create-account.dto';
+import { UpdateAccountDto } from '../dto/update-account.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Account } from './entities/account.entity';
+import { Account } from '../entities/account.entity';
 import { Repository } from 'typeorm';
-import { Transaction as AccountTransaction } from './entities/transaction.entity';
-import { CreateAccountWithTransactionDto } from './dto/create-account-with-transaction.dto';
+import { Transaction as AccountTransaction } from '../entities/transaction.entity';
+import { CreateAccountWithTransactionDto } from '../dto/create-account-with-transaction.dto';
 
 @Injectable()
 export class AccountsService {

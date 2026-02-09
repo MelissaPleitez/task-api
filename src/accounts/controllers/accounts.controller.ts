@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
-import { AccountsService } from './accounts.service';
-import { CreateAccountDto } from './dto/create-account.dto';
-import { UpdateAccountDto } from './dto/update-account.dto';
-import { CreateAccountWithTransactionDto } from './dto/create-account-with-transaction.dto';
+import { AccountsService } from '../services/accounts.service';
+import { CreateAccountDto } from '../dto/create-account.dto';
+import { UpdateAccountDto } from '../dto/update-account.dto';
+import { CreateAccountWithTransactionDto } from '../dto/create-account-with-transaction.dto';
 
 @Controller('accounts')
 export class AccountsController {
