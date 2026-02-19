@@ -20,6 +20,9 @@ export class Profile {
   @Column({ type: 'varchar', length: 500, name: 'avatar_pic', nullable: true })
   avatarPic: string;
 
+  @Column({ type: 'varchar', length: 600, name: 'background_pic', nullable: true })
+  backgroundPic: string;
+
   @OneToOne(() => User, (user) => user.profile)
   user: User;
 }
