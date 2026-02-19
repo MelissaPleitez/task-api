@@ -109,7 +109,6 @@ export class AccountsService {
 
   async getTransactionsByMonth(accountId: string, month: string) {
     try {
-      console.log('si esta llegando: ', accountId, month);
       const [year, monthNumber] = month.split('-').map(Number);
       const startDate = new Date(year, monthNumber - 1, 1);
       const endDate = new Date(year, monthNumber, 0, 23, 59, 59);
