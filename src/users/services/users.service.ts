@@ -33,8 +33,9 @@ export class UsersService {
 
   async createUser(user: CreateUserDto) {
     try {
-      const newUser = await this.usersRepository.save(user);
-      return newUser;
+      const newUser = this.usersRepository.create(user);
+      const savedUser = await this.usersRepository.save(newUser);
+      return this.findOneUser(savedUser.id.toString());
     } catch {
       throw new BadRequestException('Error creating user');
     }
