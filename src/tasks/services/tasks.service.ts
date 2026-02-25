@@ -29,11 +29,11 @@ export class TasksService {
     return task;
   }
 
-  async CreateTask(createTaskDto: CreateTaskDto) {
+  async CreateTask(createTaskDto: CreateTaskDto, userId: number) {
     try {
       const task = await this.tasksRepository.save({
         ...createTaskDto,
-        user: { id: createTaskDto.userId },
+        user: { id: userId },
       });
       return this.findOneTask(task.id.toString());
     } catch {
@@ -80,6 +80,28 @@ export class TasksService {
     } catch (error) {
       console.error('GetTasksByUserId error:', error);
       throw new BadRequestException('Error fetching tasks for the user');
+    }
+  }
+
+  async getStatusTotalTask() {
+    try {
+      const taskCompleted = await this.tasksRepository.findBy({
+        status: 'DONE',
+      });
+      const taskOnGoing = await this.tasksRepository.findBy({
+        status: 'IN_PROGRESS',
+      });
+      const taskStart = await this.tasksRepository.findBy({
+        status: 'PENDING',
+      });
+      const taskTotal = {
+        taskCompleted: taskCompleted.length,
+        taskOnGoing: taskOnGoing.length,
+        taskStart: taskStart.length,
+      };
+      return taskTotal;
+    } catch {
+      throw new BadRequestException('Error getting total completed tasks');
     }
   }
 }

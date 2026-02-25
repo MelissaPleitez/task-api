@@ -130,4 +130,16 @@ export class AccountsService {
       throw new BadRequestException('Error getting transaction by date');
     }
   }
+
+  async totalTransactionByAccount(accountId: string) {
+    try {
+      const transactions = await this.transactionRepository.findBy({
+        account: { id: Number(accountId) },
+      });
+      const transactionTotal = transactions.reduce((total, transaction) => total + Number(transaction.amount), 0);
+      return { total: transactionTotal };
+    } catch {
+      throw new BadRequestException('Error getting total transaction by account');
+    }
+  }
 }
