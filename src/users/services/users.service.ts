@@ -72,6 +72,13 @@ export class UsersService {
     }
   }
 
+  // FIND USER BY EMAIL
+  async findByEmail(email: string) {
+    const user = await this.usersRepository.findOneBy({
+      email: email,
+    });
+    return user;
+  }
   // PROFILE
   async findOneProfile(id: string) {
     const profile = await this.profilesRepository.findOne({

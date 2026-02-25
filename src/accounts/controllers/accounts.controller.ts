@@ -1,16 +1,22 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query, UseGuards, Req } from '@nestjs/common';
 import { AccountsService } from '../services/accounts.service';
 import { CreateAccountDto } from '../dto/create-account.dto';
 import { UpdateAccountDto } from '../dto/update-account.dto';
-import { CreateAccountWithTransactionDto } from '../dto/create-account-with-transaction.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
+import { Payload } from 'src/auth/models/payload.model';
+import { CreateTransactionDto } from '../dto/create-transaction.dto';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('accounts')
 export class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
 
   @Post()
-  create(@Body() createAccountDto: CreateAccountDto) {
-    return this.accountsService.createAccount(createAccountDto);
+  create(@Body() createAccountDto: CreateAccountDto, @Req() req: Request) {
+    const payload = req.user as Payload;
+    const userId = payload.sub;
+    return this.accountsService.createAccount(createAccountDto, userId);
   }
 
   @Get()
@@ -34,8 +40,10 @@ export class AccountsController {
   }
 
   @Post('/transaction')
-  createAccountWithTransaction(@Body() countAndTransaction: CreateAccountWithTransactionDto) {
-    return this.accountsService.createAccountWithInitialTransaction(countAndTransaction);
+  createTransaction(@Body() countAndTransaction: CreateTransactionDto, @Req() req: Request) {
+    const payload = req.user as Payload;
+    const userId = payload.sub;
+    return this.accountsService.createTransaction(countAndTransaction, userId);
   }
 
   @Get(':id/transactions')

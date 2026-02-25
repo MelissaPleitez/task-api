@@ -1,10 +1,5 @@
 import { IsDateString, IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString } from 'class-validator';
-
-export enum TransactionType {
-  INCOME = 'income',
-  EXPENSE = 'expense',
-  TRANSFER = 'transfer',
-}
+import { TransactionType } from '../enums/account-type.enum';
 
 export class CreateTransactionDto {
   @IsNumber()
@@ -24,4 +19,7 @@ export class CreateTransactionDto {
 
   @IsDateString({}, { message: 'Date must be a valid ISO 8601 date string' })
   date: string;
+
+  @IsNumber()
+  accountId: number;
 }

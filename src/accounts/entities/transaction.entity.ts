@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Account } from './account.entity';
-import { TransactionType } from '../dto/create-transaction.dto';
+import { TransactionType } from '../enums/account-type.enum';
 
 @Entity({
   name: 'transactions',

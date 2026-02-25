@@ -5,7 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Account } from '../entities/account.entity';
 import { Between, Repository } from 'typeorm';
 import { Transaction as AccountTransaction } from '../entities/transaction.entity';
-import { CreateAccountWithTransactionDto } from '../dto/create-account-with-transaction.dto';
+import { CreateTransactionDto } from '../dto/create-transaction.dto';
+// import { CreateAccountWithTransactionDto } from '../dto/create-account-with-transaction.dto';
 
 @Injectable()
 export class AccountsService {
@@ -16,14 +17,17 @@ export class AccountsService {
     private transactionRepository: Repository<AccountTransaction>,
   ) {}
 
-  async createAccount(createAccountDto: CreateAccountDto) {
+  async createAccount(createAccountDto: CreateAccountDto, userId: number) {
     try {
-      const account = await this.accountsRepository.save({
+      const account = this.accountsRepository.create({
         name: createAccountDto.name,
-        type: createAccountDto.accountType,
-        user: { id: createAccountDto.userId },
+        accountType: createAccountDto.accountType,
+        user: { id: userId },
+        transactions: createAccountDto.transactions,
       });
-      return this.findOneAccount(account.id.toString());
+      const savedAccount = await this.accountsRepository.save(account);
+      console.log('account to be saved:', savedAccount);
+      return this.findOneAccount(savedAccount.id.toString());
     } catch {
       throw new BadRequestException('Error creating account');
     }
@@ -77,30 +81,29 @@ export class AccountsService {
   }
 
   //TRANSACTION
-  async createAccountWithInitialTransaction(dto: CreateAccountWithTransactionDto) {
+  async createTransaction(dto: CreateTransactionDto, userId: number) {
     try {
-      // Creamos la cuenta con la relación User correcta
-      const account = this.accountsRepository.create({
-        name: dto.name,
-        accountType: dto.accountType,
-        user: { id: dto.userId },
+      // Find the account associated with the transaction
+      const account = await this.accountsRepository.findOne({
+        where: { id: dto.accountId, user: { id: userId } },
       });
-      console.log('account to be saved:', account);
-      // Guardamos la cuenta
-      const savedAccount = await this.accountsRepository.save(account);
-      console.log('savedAccounts:', savedAccount);
-      console.log('el dto mas initialTransaction:', dto.initialTransaction);
-
-      if (dto.initialTransaction) {
-        const transaction = this.transactionRepository.create({
-          ...dto.initialTransaction,
-          account: savedAccount,
-        });
-        console.log('Transaction to be saved:', transaction);
-        await this.transactionRepository.save(transaction);
+      if (!account) {
+        throw new NotFoundException(`Account with id ${dto.accountId} not found for user ${userId}`);
       }
 
-      return this.findOneAccount(savedAccount.id.toString());
+      // Create a new transaction
+      const transaction = this.transactionRepository.create({
+        amount: dto.amount,
+        type: dto.type,
+        description: dto.description,
+        category: dto.category,
+        date: new Date(dto.date),
+        account: account,
+      });
+
+      // Save the transaction to the database
+      const savedTransaction = await this.transactionRepository.save(transaction);
+      return savedTransaction;
     } catch (error) {
       console.log(error);
       throw new BadRequestException('Error creating account and transaction');
@@ -127,62 +130,4 @@ export class AccountsService {
       throw new BadRequestException('Error getting transaction by date');
     }
   }
-
-  // async findAllTransaction() {
-  //   try {
-  //     const transactions = await this.transactionsRepository.find({
-  //       relations: ['user.profile', 'account'],
-  //     });
-  //     return transactions;
-  //   } catch {
-  //     throw new BadRequestException('Error fetching transactions');
-  //   }
-  // }
-
-  // async findOneTransaction(id: string) {
-  //   try {
-  //     const transaction = await this.transactionsRepository.findOne({
-  //       where: { id: parseInt(id) },
-  //       relations: ['user.profile', 'account'],
-  //     });
-  //     if (!transaction) {
-  //       throw new NotFoundException(`Transaction with id ${id} not found `);
-  //     }
-  //     return transaction;
-  //   } catch {
-  //     throw new BadRequestException('Error fetching transaction');
-  //   }
-  // }
-
-  // async createTransaction(createTransactionDto: CreateTransactionDto) {
-  //   try {
-  //     const saveTransaction = await this.transactionsRepository.save({
-  //       ...createTransactionDto,
-  //       account: { id: createTransactionDto.accountId },
-  //     });
-  //     return this.findOneTransaction(saveTransaction.id.toString());
-  //   } catch {
-  //     throw new BadRequestException('Error creating transaction');
-  //   }
-  // }
-
-  // async updateTransaction(id: string, updateTransactionDto: UpdateTransactionDto) {
-  //   try {
-  //     const transaction = await this.transactionsRepository.findOneBy({ id: parseInt(id) });
-
-  //     if (!transaction) {
-  //       throw new NotFoundException(`Transaction with id ${id} not found `);
-  //     }
-  //     const updatedTransaction = this.transactionsRepository.merge(transaction, updateTransactionDto);
-  //     const savedTransaction = await this.transactionsRepository.save(updatedTransaction);
-  //     return savedTransaction;
-  //   } catch {
-  //     throw new BadRequestException('Error updating transaction');
-  //   }
-  // }
-
-  // async removeTransaction(id: string) {
-  //   await this.transactionsRepository.delete(parseInt(id));
-  //   return { message: `Transaction with id ${id} has been deleted` };
-  // }
 }
