@@ -4,9 +4,3 @@ export enum AccountType {
   CREDIT = 'credit',
   SAVINGS = 'savings',
 }
-
-export enum TransactionType {
-  INCOME = 'income',
-  EXPENSE = 'expense',
-  TRANSFER = 'transfer',
-}

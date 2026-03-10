@@ -1,5 +1,6 @@
 import { User } from '../../users/entities/user.entity';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { TaskCategory, TaskPriority, TaskStatus } from '../enums/tasks-type.enum';
 
 @Entity({
   name: 'tasks',
@@ -17,14 +18,14 @@ export class Task {
   @Column({ type: 'varchar', length: 255, name: 'cover_pic', nullable: true })
   coverPic: string;
 
-  @Column({ type: 'varchar', default: 'pending' })
-  status: string; //(pending | in_progress | done)
+  @Column({ type: 'enum', enum: TaskStatus, default: TaskStatus.PENDING })
+  status: TaskStatus; //(pending | in_progress | done)
 
-  @Column({ type: 'varchar' })
-  priority: string; //(low | medium | high)
+  @Column({ type: 'enum', enum: TaskPriority })
+  priority: TaskPriority; //(low | medium | high)
 
-  @Column({ type: 'varchar', length: 100 })
-  category: string; //(work | personal | gym | finance | study)
+  @Column({ type: 'enum', enum: TaskCategory })
+  category: TaskCategory; //(work | personal | gym | finance | study)
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
   createdAt: Date;

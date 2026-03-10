@@ -4,6 +4,10 @@ import { Task } from '../../tasks/entities/task.entity';
 import { Account } from '../../accounts/entities/account.entity';
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
+import { Budget } from 'src/budgets/entities/budget.entity';
+import { RecurringTransaction } from 'src/recurring-transactions/entities/recurring-transaction.entity';
+import { Category } from 'src/categories/entities/category.entity';
+import { Report } from 'src/reports/entities/report.entity';
 
 @Entity({
   name: 'users',
@@ -34,6 +38,18 @@ export class User {
 
   @OneToMany(() => Account, (account) => account.user)
   accounts: Account[];
+
+  @OneToMany(() => Budget, (budget) => budget.user)
+  budgets: Budget[];
+
+  @OneToMany(() => RecurringTransaction, (recurring) => recurring.user)
+  recurringTransactions: RecurringTransaction[];
+
+  @OneToMany(() => Category, (category) => category.user)
+  categories: Category[];
+
+  @OneToMany(() => Report, (report) => report.user)
+  reports: Report[];
 
   @BeforeInsert()
   async hashPassword() {

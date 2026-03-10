@@ -6,6 +6,11 @@ import { Env } from './users/models/env.model';
 import { TasksModule } from './tasks/tasks.module';
 import { AccountsModule } from './accounts/accounts.module';
 import { AuthModule } from './auth/auth.module';
+import { BudgetsModule } from './budgets/budgets.module';
+import { RecurringTransactionsModule } from './recurring-transactions/recurring-transactions.module';
+import { CategoriesModule } from './categories/categories.module';
+import { ReportsModule } from './reports/reports.module';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
@@ -29,6 +34,11 @@ import { AuthModule } from './auth/auth.module';
     TasksModule,
     AccountsModule,
     AuthModule,
+    BudgetsModule,
+    RecurringTransactionsModule,
+    CategoriesModule,
+    ReportsModule,
+    TransactionsModule,
   ],
 })
 export class AppModule {}

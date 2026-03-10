@@ -1,4 +1,5 @@
 import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { TaskCategory, TaskPriority, TaskStatus } from '../enums/tasks-type.enum';
 
 export class CreateTaskDto {
   @IsString()
@@ -9,15 +10,14 @@ export class CreateTaskDto {
   @IsOptional()
   description?: string;
 
-  @IsString()
-  @IsNotEmpty()
-  category: string;
+  @IsEnum(TaskCategory, { message: 'Priority must be one of the following values: LOW, MEDIUM, HEIGH' })
+  category: TaskCategory;
 
-  @IsEnum(['LOW', 'MEDIUM', 'HEIGH'], { message: 'Priority must be one of the following values: LOW, MEDIUM, HEIGH' })
-  priority: string;
+  @IsEnum(TaskPriority, { message: 'Priority must be one of the following values: LOW, MEDIUM, HEIGH' })
+  priority: TaskPriority;
 
-  @IsEnum(['PENDING', 'IN_PROGRESS', 'DONE'], { message: 'Status must be one of the following values: PENDING, IN_PROGRESS, DONE' })
-  status: string;
+  @IsEnum(TaskStatus, { message: 'Status must be one of the following values: PENDING, IN_PROGRESS, DONE' })
+  status: TaskStatus;
 
   @IsString()
   @IsOptional()

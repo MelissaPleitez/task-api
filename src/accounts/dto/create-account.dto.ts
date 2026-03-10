@@ -1,6 +1,4 @@
-import { Type } from 'class-transformer';
-import { IsEnum, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
-import { CreateTransactionDto } from './create-transaction.dto';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { AccountType } from '../enums/account-type.enum';
 
 export class CreateAccountDto {
@@ -11,9 +9,4 @@ export class CreateAccountDto {
   @IsString()
   @IsEnum(AccountType, { message: 'Type must be one of the following values: savings, bank, credit, cash' })
   accountType: AccountType;
-
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => CreateTransactionDto)
-  transactions?: CreateTransactionDto[];
 }

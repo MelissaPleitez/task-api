@@ -52,7 +52,6 @@ export class UsersService {
       if (!user) {
         throw new NotFoundException(`User with id ${id} not found `);
       }
-      console.log(user);
       const updatedUser = this.usersRepository.merge(user, users);
       const saverUser = await this.usersRepository.save(updatedUser);
       return saverUser;
@@ -65,7 +64,7 @@ export class UsersService {
     try {
       await this.usersRepository.delete(id);
       return {
-        error: `User with id ${id} was deleted`,
+        message: `User with id ${id} was deleted`,
       };
     } catch {
       throw new BadRequestException('Error deleting user');
