@@ -1,6 +1,6 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { CreateCategoryDto } from '../dto/create-category.dto';
+import { UpdateCategoryDto } from '../dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from '../entities/category.entity';
 import { Repository } from 'typeorm';
@@ -30,19 +30,49 @@ export class CategoriesService {
     }
   }
 
-  findAll() {
-    return `This action returns all categories`;
+  async findAllCategories(userId: number) {
+    try {
+      const category = await this.categoryRepository.find({
+        where: [{ user: { id: userId } }, { isSystem: true }],
+        order: { isSystem: 'DESC', name: 'ASC' },
+      });
+      return category;
+    } catch {
+      throw new BadRequestException('Error getting categories');
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async getOneCategory(id: number, userId: number) {
+    return this.findOneCategory(id, userId);
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async updateCategory(id: number, updateCategoryDto: UpdateCategoryDto, userId: number) {
+    const category = await this.findOneCategory(id, userId);
+    try {
+      const updateCatory = this.categoryRepository.merge(category, updateCategoryDto);
+      return await this.categoryRepository.save(updateCatory);
+    } catch {
+      throw new BadRequestException('Error updating category');
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async removeCategory(id: number, userId: number) {
+    await this.findOneCategory(id, userId);
+    try {
+      await this.categoryRepository.delete(id);
+      return { message: `Category with id ${id} deleted successfully` };
+    } catch {
+      throw new BadRequestException('Error deleting category');
+    }
+  }
+
+  async findOneCategory(categoryId: number, userId: number) {
+    const category = await this.categoryRepository.findOne({
+      where: { id: categoryId, user: { id: userId }, isSystem: false },
+    });
+    if (!category) {
+      throw new NotFoundException('Category not found');
+    }
+    return category;
   }
 }
