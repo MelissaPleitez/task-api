@@ -1,34 +1,48 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { RecurringTransactionsService } from './recurring-transactions.service';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
+import { RecurringTransactionsService } from '../services/recurring-transactions.service';
 import { CreateRecurringTransactionDto } from '../dto/create-recurring-transaction.dto';
 import { UpdateRecurringTransactionDto } from '../dto/update-recurring-transaction.dto';
+import { Request } from 'express';
+import { Payload } from 'src/auth/models/payload.model';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('recurring-transactions')
 export class RecurringTransactionsController {
   constructor(private readonly recurringTransactionsService: RecurringTransactionsService) {}
 
   @Post()
-  create(@Body() createRecurringTransactionDto: CreateRecurringTransactionDto) {
-    return this.recurringTransactionsService.create(createRecurringTransactionDto);
+  create(@Body() createRecurringTransactionDto: CreateRecurringTransactionDto, @Req() req: Request) {
+    const payload = req.user as Payload;
+    const userId = payload.sub;
+    return this.recurringTransactionsService.createRecurringTransaction(createRecurringTransactionDto, userId);
   }
 
   @Get()
-  findAll() {
-    return this.recurringTransactionsService.findAll();
+  findAll(@Req() req: Request) {
+    const payload = req.user as Payload;
+    const userId = payload.sub;
+    return this.recurringTransactionsService.findAllRecurringTransaction(userId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.recurringTransactionsService.findOne(+id);
+  findOne(@Param('id') id: string, @Req() req: Request) {
+    const payload = req.user as Payload;
+    const userId = payload.sub;
+    return this.recurringTransactionsService.findOneRecurringTransaction(+id, userId);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRecurringTransactionDto: UpdateRecurringTransactionDto) {
-    return this.recurringTransactionsService.update(+id, updateRecurringTransactionDto);
+  update(@Param('id') id: string, @Body() updateRecurringTransactionDto: UpdateRecurringTransactionDto, @Req() req: Request) {
+    const payload = req.user as Payload;
+    const userId = payload.sub;
+    return this.recurringTransactionsService.updateRecurringTransaction(+id, updateRecurringTransactionDto, userId);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.recurringTransactionsService.remove(+id);
+  remove(@Param('id') id: string, @Req() req: Request) {
+    const payload = req.user as Payload;
+    const userId = payload.sub;
+    return this.recurringTransactionsService.removeRecurringTransaction(+id, userId);
   }
 }

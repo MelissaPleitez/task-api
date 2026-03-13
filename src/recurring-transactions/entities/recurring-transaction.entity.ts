@@ -1,4 +1,4 @@
-import { TransactionType } from 'src/accounts/enums/account-type.enum';
+import { TransactionType } from '../../transactions/enums/transaction-type.enum';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { RecurrenceFrequency } from '../enum/recurring-transaction-type.enum';
 import { Account } from 'src/accounts/entities/account.entity';
