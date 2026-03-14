@@ -1,34 +1,40 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ReportsService } from './reports.service';
-import { CreateReportDto } from './dto/create-report.dto';
-import { UpdateReportDto } from './dto/update-report.dto';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { ReportsService } from '../services/reports.service';
+import { CreateReportDto } from '../dto/create-report.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
+import { Payload } from 'src/auth/models/payload.model';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('reports')
 export class ReportsController {
   constructor(private readonly reportsService: ReportsService) {}
 
   @Post()
-  create(@Body() createReportDto: CreateReportDto) {
-    return this.reportsService.create(createReportDto);
+  create(@Body() createReportDto: CreateReportDto, @Req() req: Request) {
+    const payload = req.user as Payload;
+    const userId = payload.sub;
+    return this.reportsService.createReport(createReportDto, userId);
   }
 
   @Get()
-  findAll() {
-    return this.reportsService.findAll();
+  findAll(@Req() req: Request) {
+    const payload = req.user as Payload;
+    const userId = payload.sub;
+    return this.reportsService.findAllReports(userId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reportsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReportDto: UpdateReportDto) {
-    return this.reportsService.update(+id, updateReportDto);
+  findOne(@Param('id') id: string, @Req() req: Request) {
+    const payload = req.user as Payload;
+    const userId = payload.sub;
+    return this.reportsService.findOneReport(+id, userId);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reportsService.remove(+id);
+  remove(@Param('id') id: string, @Req() req: Request) {
+    const payload = req.user as Payload;
+    const userId = payload.sub;
+    return this.reportsService.removeReport(+id, userId);
   }
 }

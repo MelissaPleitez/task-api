@@ -19,7 +19,7 @@ export class Report {
   @Column({ type: 'timestamptz' })
   endDate: Date;
 
-  @Column({ type: 'jsonb' })
+  @Column({ type: 'jsonb', default: {} })
   data: {
     totalIncome: number;
     totalExpenses: number;
