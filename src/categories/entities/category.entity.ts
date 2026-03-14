@@ -1,7 +1,7 @@
 import { TransactionType } from '../../transactions/enums/transaction-type.enum';
-import { Budget } from 'src/budgets/entities/budget.entity';
-import { RecurringTransaction } from 'src/recurring-transactions/entities/recurring-transaction.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Budget } from '../../budgets/entities/budget.entity';
+import { RecurringTransaction } from '../../recurring-transactions/entities/recurring-transaction.entity';
+import { User } from '../../users/entities/user.entity';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'categories' })

@@ -2,8 +2,8 @@ import { User } from '../../users/entities/user.entity';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Transaction as AccountTransaction } from '../../transactions/entities/transaction.entity';
 import { AccountType } from '../enums/account-type.enum';
-import { Budget } from 'src/budgets/entities/budget.entity';
-import { RecurringTransaction } from 'src/recurring-transactions/entities/recurring-transaction.entity';
+import { Budget } from '../../budgets/entities/budget.entity';
+import { RecurringTransaction } from '../../recurring-transactions/entities/recurring-transaction.entity';
 
 @Entity({
   name: 'accounts',

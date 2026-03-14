@@ -4,10 +4,10 @@ import { Task } from '../../tasks/entities/task.entity';
 import { Account } from '../../accounts/entities/account.entity';
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
-import { Budget } from 'src/budgets/entities/budget.entity';
-import { RecurringTransaction } from 'src/recurring-transactions/entities/recurring-transaction.entity';
-import { Category } from 'src/categories/entities/category.entity';
-import { Report } from 'src/reports/entities/report.entity';
+import { Budget } from '../../budgets/entities/budget.entity';
+import { RecurringTransaction } from '../../recurring-transactions/entities/recurring-transaction.entity';
+import { Category } from '../../categories/entities/category.entity';
+import { Report } from '../../reports/entities/report.entity';
 
 @Entity({
   name: 'users',

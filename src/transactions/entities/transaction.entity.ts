@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { Account } from 'src/accounts/entities/account.entity';
-import { Category } from 'src/categories/entities/category.entity';
-import { RecurringTransaction } from 'src/recurring-transactions/entities/recurring-transaction.entity';
+import { Account } from '../../accounts/entities/account.entity';
+import { Category } from '../../categories/entities/category.entity';
+import { RecurringTransaction } from '../../recurring-transactions/entities/recurring-transaction.entity';
 import { TransactionType } from '../enums/transaction-type.enum';
 
 @Entity({ name: 'transactions' })

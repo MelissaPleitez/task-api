@@ -1,9 +1,9 @@
 import { TransactionType } from '../../transactions/enums/transaction-type.enum';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { RecurrenceFrequency } from '../enum/recurring-transaction-type.enum';
-import { Account } from 'src/accounts/entities/account.entity';
-import { User } from 'src/users/entities/user.entity';
-import { Category } from 'src/categories/entities/category.entity';
+import { Account } from '../../accounts/entities/account.entity';
+import { User } from '../../users/entities/user.entity';
+import { Category } from '../../categories/entities/category.entity';
 
 @Entity({ name: 'recurring_transactions' })
 export class RecurringTransaction {

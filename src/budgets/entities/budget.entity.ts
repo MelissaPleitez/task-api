@@ -1,8 +1,8 @@
-import { Account } from 'src/accounts/entities/account.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Account } from '../../accounts/entities/account.entity';
+import { User } from '../../users/entities/user.entity';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { BudgetPeriod } from '../enums/budget-period.enum';
-import { Category } from 'src/categories/entities/category.entity';
+import { Category } from '../../categories/entities/category.entity';
 
 @Entity({ name: 'budgets' })
 export class Budget {
