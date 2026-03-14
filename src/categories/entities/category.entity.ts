@@ -12,7 +12,7 @@ export class Category {
   @Column({ type: 'varchar', length: 80 })
   name: string;
 
-  @Column({ type: 'varchar', length: 10, default: '📦' })
+  @Column({ type: 'varchar', length: 50, default: 'packageOpen' })
   icon: string;
 
   @Column({ type: 'varchar', length: 7, default: '#888888' })
