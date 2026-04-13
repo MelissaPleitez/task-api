@@ -15,17 +15,8 @@ export class TasksService {
 
   async findAllTask(userId: number) {
     return await this.tasksRepository.find({
-      where: { id: userId },
+      where: { user: { id: userId } },
     });
-  }
-
-  async findOneTask(id: number, userId: number) {
-    const where = userId ? { id: id, user: { id: userId } } : { id: id };
-    const task = await this.tasksRepository.findOne({ where });
-    if (!task) {
-      throw new NotFoundException(`Task with id ${id} not found`);
-    }
-    return task;
   }
 
   async CreateTask(createTaskDto: CreateTaskDto, userId: number) {
@@ -69,23 +60,23 @@ export class TasksService {
   }
 
   //Getting tasks for a specific user
-  async GetTasksByUserId(userId: string) {
-    const id = Number(userId);
-    try {
-      const tasks = await this.tasksRepository.find({
-        where: { user: { id: id } },
-        relations: ['user.profile'],
-      });
+  // async GetTasksByUserId(userId: string) {
+  //   const id = Number(userId);
+  //   try {
+  //     const tasks = await this.tasksRepository.find({
+  //       where: { user: { id: id } },
+  //       relations: ['user.profile'],
+  //     });
 
-      if (tasks.length === 0) {
-        throw new NotFoundException(`No tasks found for user with id ${userId}`);
-      }
-      return tasks;
-    } catch (error) {
-      console.error('GetTasksByUserId error:', error);
-      throw new BadRequestException('Error fetching tasks for the user');
-    }
-  }
+  //     if (tasks.length === 0) {
+  //       throw new NotFoundException(`No tasks found for user with id ${userId}`);
+  //     }
+  //     return tasks;
+  //   } catch (error) {
+  //     console.error('GetTasksByUserId error:', error);
+  //     throw new BadRequestException('Error fetching tasks for the user');
+  //   }
+  // }
 
   async getStatusTotalTask() {
     try {
@@ -101,5 +92,14 @@ export class TasksService {
     } catch {
       throw new BadRequestException('Error getting total completed tasks');
     }
+  }
+
+  async findOneTask(id: number, userId: number) {
+    const where = userId ? { id: id, user: { id: userId } } : { id: id };
+    const task = await this.tasksRepository.findOne({ where });
+    if (!task) {
+      throw new NotFoundException(`Task with id ${id} not found`);
+    }
+    return task;
   }
 }

@@ -21,7 +21,8 @@ export class TasksController {
   @Get()
   findAll(@Req() req: Request) {
     const payload = req.user as Payload;
-    return this.tasksService.findAllTask(payload.sub);
+    const userId = payload.sub;
+    return this.tasksService.findAllTask(userId);
   }
 
   @Get('total')
@@ -32,23 +33,26 @@ export class TasksController {
   @Get(':id')
   findOne(@Param('id') id: string, @Req() req: Request) {
     const payload = req.user as Payload;
-    return this.tasksService.findOneTask(parseInt(id), payload.sub);
+    const userId = payload.sub;
+    return this.tasksService.findOneTask(parseInt(id), userId);
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto, @Req() req: Request) {
     const payload = req.user as Payload;
-    return this.tasksService.updateTask(parseInt(id), updateTaskDto, payload.sub);
+    const userId = payload.sub;
+    return this.tasksService.updateTask(parseInt(id), updateTaskDto, userId);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string, @Req() req: Request) {
     const payload = req.user as Payload;
-    return this.tasksService.removeTask(+id, payload.sub);
+    const userId = payload.sub;
+    return this.tasksService.removeTask(+id, userId);
   }
 
-  @Get(':id/profile')
-  getTaskById(@Param('id') id: string) {
-    return this.tasksService.GetTasksByUserId(id);
-  }
+  // @Get(':id/profile')
+  // getTaskById(@Param('id') id: string) {
+  //   return this.tasksService.GetTasksByUserId(id);
+  // }
 }

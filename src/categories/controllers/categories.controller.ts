@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Req, UseGuards } from '@nestjs/common';
 import { CategoriesService } from '../services/categories.service';
 import { CreateCategoryDto } from '../dto/create-category.dto';
 import { UpdateCategoryDto } from '../dto/update-category.dto';
@@ -32,7 +32,7 @@ export class CategoriesController {
     return this.categoriesService.getOneCategory(parseInt(id), userId);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto, @Req() req: Request) {
     const payload = req.user as Payload;
     const userId = payload.sub;

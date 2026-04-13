@@ -36,8 +36,8 @@ export class UsersService {
       const newUser = this.usersRepository.create(user);
       const savedUser = await this.usersRepository.save(newUser);
       return this.findOneUser(savedUser.id.toString());
-    } catch {
-      throw new BadRequestException('Error creating user');
+    } catch (error) {
+      throw new BadRequestException(`Error creating user: ${error}`);
     }
   }
 

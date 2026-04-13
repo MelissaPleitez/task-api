@@ -22,8 +22,4 @@ export class CreateTaskDto {
   @IsString()
   @IsOptional()
   coverPic?: string;
-
-  @IsInt()
-  @IsNotEmpty()
-  userId: number;
 }
