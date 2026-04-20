@@ -54,10 +54,10 @@ export class RecurringTransactionsService {
   async updateRecurringTransaction(id: number, updateRecurringTransactionDto: UpdateRecurringTransactionDto, userId: number) {
     const oldRecurring = await this.getOneRecurringTransaction(id, userId);
     try {
-      const mergeRecurring = this.recurringTransactionRepository.merge(oldRecurring, updateRecurringTransactionDto);
-      return await this.recurringTransactionRepository.save(mergeRecurring);
+      const merged = this.recurringTransactionRepository.merge(oldRecurring, updateRecurringTransactionDto);
+      return await this.recurringTransactionRepository.save(merged);
     } catch {
-      throw new BadRequestException('Error updating Recurring transaction');
+      throw new BadRequestException('Error updating recurring transaction');
     }
   }
 

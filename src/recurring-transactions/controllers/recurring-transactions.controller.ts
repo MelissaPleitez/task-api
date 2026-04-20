@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Req, UseGuards, Put } from '@nestjs/common';
 import { RecurringTransactionsService } from '../services/recurring-transactions.service';
 import { CreateRecurringTransactionDto } from '../dto/create-recurring-transaction.dto';
 import { UpdateRecurringTransactionDto } from '../dto/update-recurring-transaction.dto';
@@ -32,7 +32,7 @@ export class RecurringTransactionsController {
     return this.recurringTransactionsService.findOneRecurringTransaction(+id, userId);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateRecurringTransactionDto: UpdateRecurringTransactionDto, @Req() req: Request) {
     const payload = req.user as Payload;
     const userId = payload.sub;

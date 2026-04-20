@@ -68,7 +68,7 @@ export class TransactionsService {
 
     return this.transactionRepository.find({
       where: { account: { id: accountId } },
-      relations: ['category'],
+      relations: ['category', 'account'],
       order: { date: 'DESC' },
     });
   }
@@ -121,17 +121,40 @@ export class TransactionsService {
   async update(id: number, dto: UpdateTransactionDto, userId: number) {
     const transaction = await this.transactionRepository.findOne({
       where: { id },
-      relations: ['account', 'account.user'],
+      relations: ['account', 'account.user', 'category'],
     });
-    if (!transaction) {
-      throw new NotFoundException(`Transaction ${id} not found`);
-    }
-    if (transaction.account.user?.id !== userId) {
+
+    if (!transaction || transaction.account.user?.id !== userId) {
       throw new NotFoundException(`Transaction ${id} not found`);
     }
 
+    if (dto.categoryId !== undefined) {
+      if (dto.categoryId === null) {
+        transaction.category = null;
+      } else {
+        const category = await this.categoryRepository.findOne({
+          where: [
+            { id: dto.categoryId, user: { id: userId } },
+            { id: dto.categoryId, isSystem: true },
+          ],
+        });
+
+        if (!category) {
+          throw new NotFoundException(`Category ${dto.categoryId} not found`);
+        }
+
+        transaction.category = category;
+      }
+    }
+
     const updated = this.transactionRepository.merge(transaction, dto);
-    return this.transactionRepository.save(updated);
+
+    const saved = await this.transactionRepository.save(updated);
+
+    return this.transactionRepository.findOne({
+      where: { id: saved.id },
+      relations: ['category', 'account'],
+    });
   }
 
   async remove(id: number, userId: number) {
