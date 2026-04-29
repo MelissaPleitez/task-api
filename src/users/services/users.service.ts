@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Profile } from '../entities/profile.entity';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class UsersService {
@@ -12,6 +13,7 @@ export class UsersService {
     private usersRepository: Repository<User>,
     @InjectRepository(Profile)
     private profilesRepository: Repository<Profile>,
+    private cloudinaryService: CloudinaryService,
   ) {}
 
   async findAllUsers() {
@@ -39,6 +41,23 @@ export class UsersService {
     } catch (error) {
       throw new BadRequestException(`Error creating user: ${error}`);
     }
+  }
+
+  // ── upload avatar ──
+  async uploadAvatar(userId: string, file: Express.Multer.File) {
+    const profile = await this.profilesRepository.findOne({
+      where: { user: { id: parseInt(userId) } },
+    });
+    if (!profile) throw new NotFoundException('Profile not found');
+
+    // upload to cloudinary — if user already has avatar,
+    // it gets overwritten automatically because we use user-{id} as public_id
+    const avatarUrl = await this.cloudinaryService.uploadAvatar(file, userId);
+
+    profile.avatarPic = avatarUrl;
+    await this.profilesRepository.save(profile);
+
+    return { avatarPic: avatarUrl };
   }
 
   async UpdateUser(id: string, users: UpdateUserDto) {

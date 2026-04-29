@@ -1,6 +1,6 @@
 import { User } from '../../users/entities/user.entity';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { ReportType } from '../enums/report-type.enum.ts';
+import { ReportType } from 'src/reports/enums/report-type.enum';
 
 @Entity({ name: 'reports' })
 export class Report {

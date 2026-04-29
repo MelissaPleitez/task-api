@@ -1,5 +1,5 @@
 import { IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
-import { ReportType } from '../enums/report-type.enum.ts';
+import { ReportType } from '../enums/report-type.enum';
 
 export class CreateReportDto {
   @IsEnum(ReportType)
