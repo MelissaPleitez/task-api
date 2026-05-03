@@ -342,6 +342,21 @@ This only needs to be run once after the initial migration.
 
 ---
 
+### 5. Run the frontend
+
+The frontend is a separate repository. Clone and run it:
+
+```bash
+git clone https://github.com/MelissaPleitez/personal-finance-task-management.git
+cd /finance-management
+npm install
+npm run dev
+```
+
+The app will be available at `http://localhost:3001`.
+
+> See the [frontend repository](https://github.com/MelissaPleitez/personal-finance-task-management#) for full frontend documentation.
+
 ## Contributing
 
 1. Fork the repository
