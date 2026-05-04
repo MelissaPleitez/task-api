@@ -108,19 +108,14 @@ export class ReportsService {
   }
 
   async createReport(createReportDto: CreateReportDto, userId: number) {
-    console.log('1. createReport called:', createReportDto, 'userId:', userId);
     try {
       const startDate = new Date(createReportDto.startDate);
       const endDate = new Date(createReportDto.endDate);
-      console.log('2. dates parsed:', startDate, endDate);
 
       if (startDate >= endDate) {
         throw new BadRequestException('Start date must be before end date');
       }
-
-      console.log('3. calling calculateReportData...');
       const data = await this.calculateReportData(userId, startDate, endDate);
-      console.log('4. data calculated:', data);
 
       const newReport = this.reportsRepository.create({
         type: createReportDto.type,
@@ -131,10 +126,8 @@ export class ReportsService {
         user: { id: userId },
       });
 
-      console.log('5. saving report...');
       return await this.reportsRepository.save(newReport);
     } catch (error) {
-      console.error('ERROR in createReport:', error); // ← this will show the real error
       if (error instanceof BadRequestException) throw error;
       throw new BadRequestException('Unable to create report');
     }
@@ -144,7 +137,7 @@ export class ReportsService {
     try {
       return await this.reportsRepository.find({
         where: { user: { id: userId } },
-        order: { createdAt: 'DESC' }, // ← newest first
+        order: { createdAt: 'DESC' },
       });
     } catch {
       throw new BadRequestException('Error fetching reports');
@@ -159,7 +152,6 @@ export class ReportsService {
     return report;
   }
 
-  // ── recalculates the snapshot on demand ──
   async regenerateReport(reportId: number, userId: number) {
     const report = await this.getOneReport(reportId, userId);
     try {

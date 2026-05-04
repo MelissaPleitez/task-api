@@ -5,6 +5,7 @@ import { Payload } from 'src/auth/models/payload.model';
 import { TransactionsService } from '../services/transactions.service';
 import { CreateTransactionDto } from '../dto/create-transaction.dto';
 import { UpdateTransactionDto } from '../dto/update-transaction.dto';
+import { PaginationDto } from 'src/pagination/dto/create-pagination.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('transactions')
@@ -18,9 +19,9 @@ export class TransactionsController {
   }
 
   @Get('account/:accountId')
-  findAllByAccount(@Param('accountId') accountId: string, @Req() req: Request) {
+  findAllByAccount(@Param('accountId') accountId: string, @Query() pagination: PaginationDto, @Req() req: Request) {
     const payload = req.user as Payload;
-    return this.transactionsService.findAllByAccount(+accountId, payload.sub);
+    return this.transactionsService.findAllByAccount(+accountId, payload.sub, pagination);
   }
 
   @Get('account/:accountId/month')

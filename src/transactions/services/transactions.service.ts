@@ -7,6 +7,7 @@ import { Category } from '../../categories/entities/category.entity';
 import { CreateTransactionDto } from '../dto/create-transaction.dto';
 import { UpdateTransactionDto } from '../dto/update-transaction.dto';
 import { TransactionType } from '../enums/transaction-type.enum';
+import { PaginationDto } from 'src/pagination/dto/create-pagination.dto';
 
 @Injectable()
 export class TransactionsService {
@@ -58,19 +59,47 @@ export class TransactionsService {
     return this.transactionRepository.save(transaction);
   }
 
-  async findAllByAccount(accountId: number, userId: number) {
+  // async findAllByAccount(accountId: number, userId: number) {
+  //   const account = await this.accountRepository.findOne({
+  //     where: { id: accountId, user: { id: userId } },
+  //   });
+  //   if (!account) {
+  //     throw new NotFoundException(`Account ${accountId} not found`);
+  //   }
+
+  //   return this.transactionRepository.find({
+  //     where: { account: { id: accountId } },
+  //     relations: ['category', 'account'],
+  //     order: { date: 'DESC' },
+  //   });
+  // }
+
+  async findAllByAccount(accountId: number, userId: number, pagination: PaginationDto) {
     const account = await this.accountRepository.findOne({
       where: { id: accountId, user: { id: userId } },
     });
+
     if (!account) {
       throw new NotFoundException(`Account ${accountId} not found`);
     }
 
-    return this.transactionRepository.find({
+    const limit = Math.min(pagination.limit ?? 10, 50);
+    const offset = pagination.offset ?? 0;
+
+    const [items, total] = await this.transactionRepository.findAndCount({
       where: { account: { id: accountId } },
       relations: ['category', 'account'],
       order: { date: 'DESC' },
+      skip: offset,
+      take: limit,
     });
+
+    return {
+      items,
+      total,
+      limit,
+      offset,
+    };
   }
 
   async findByMonth(accountId: number, month: string, userId: number) {

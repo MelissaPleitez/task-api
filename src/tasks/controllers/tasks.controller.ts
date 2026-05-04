@@ -50,9 +50,4 @@ export class TasksController {
     const userId = payload.sub;
     return this.tasksService.removeTask(+id, userId);
   }
-
-  // @Get(':id/profile')
-  // getTaskById(@Param('id') id: string) {
-  //   return this.tasksService.GetTasksByUserId(id);
-  // }
 }

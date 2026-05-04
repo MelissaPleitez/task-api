@@ -59,25 +59,6 @@ export class TasksService {
     }
   }
 
-  //Getting tasks for a specific user
-  // async GetTasksByUserId(userId: string) {
-  //   const id = Number(userId);
-  //   try {
-  //     const tasks = await this.tasksRepository.find({
-  //       where: { user: { id: id } },
-  //       relations: ['user.profile'],
-  //     });
-
-  //     if (tasks.length === 0) {
-  //       throw new NotFoundException(`No tasks found for user with id ${userId}`);
-  //     }
-  //     return tasks;
-  //   } catch (error) {
-  //     console.error('GetTasksByUserId error:', error);
-  //     throw new BadRequestException('Error fetching tasks for the user');
-  //   }
-  // }
-
   async getStatusTotalTask() {
     try {
       const taskCompleted = await this.tasksRepository.findBy({ status: TaskStatus.DONE });
