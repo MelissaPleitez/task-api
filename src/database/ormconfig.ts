@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
 
-config(); // Carga las variables de entorno desde el archivo .env
+config();
 
 export default new DataSource({
   type: 'postgres',

@@ -19,11 +19,9 @@ export class CloudinaryService {
         },
         (error, result) => {
           if (error || !result) return reject(new BadRequestException('Upload failed'));
-          resolve(result.secure_url); // ← always https, works in production
+          resolve(result.secure_url);
         },
       );
-
-      // convert buffer to stream and pipe to cloudinary
       Readable.from(file.buffer).pipe(upload);
     });
   }

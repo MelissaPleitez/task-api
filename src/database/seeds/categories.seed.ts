@@ -1,4 +1,3 @@
-// src/database/seeds/categories.seed.ts
 import AppDataSource from '../ormconfig';
 import { Category } from '../../categories/entities/category.entity';
 import { TransactionType } from '../../transactions/enums/transaction-type.enum';
@@ -25,7 +24,6 @@ async function seed() {
 
   const existing = await categoryRepository.findBy({ isSystem: true });
   if (existing.length > 0) {
-    console.log('System categories already seeded — skipping');
     await AppDataSource.destroy();
     return;
   }
@@ -39,7 +37,6 @@ async function seed() {
   );
 
   await categoryRepository.save(categories);
-  console.log(`Seeded ${categories.length} system categories`);
   await AppDataSource.destroy();
 }
 

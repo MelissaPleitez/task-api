@@ -16,8 +16,6 @@ export class BudgetsService {
     private transactionRepository: Repository<Transaction>,
   ) {}
 
-  // ── calculates how much has been spent for a given budget ──
-  // filters by: date range, expense type, and optionally category + account
   private async calculateSpent(budget: Budget): Promise<number> {
     const qb = this.transactionRepository.createQueryBuilder('t').innerJoin('t.account', 'account').innerJoin('account.user', 'user').where('user.id = :userId', { userId: budget.user.id }).andWhere('t.type = :type', { type: TransactionType.EXPENSE }).andWhere('t.date >= :start', { start: budget.startDate }).andWhere('t.date <= :end', { end: budget.endDate });
 

@@ -41,16 +41,4 @@ export class AccountsController {
     const payload = req.user as Payload;
     return this.accountsService.removeAccount(id, payload.sub);
   }
-
-  // @Post('/transaction')
-  // createTransaction(@Body() countAndTransaction: CreateTransactionDto, @Req() req: Request) {
-  //   const payload = req.user as Payload;
-  //   const userId = payload.sub;
-  //   return this.accountsService.createTransaction(countAndTransaction, userId);
-  // }
-
-  // @Get(':id/transactions')
-  // getTransactionsByMonth(@Param('id') id: string, @Query('month') month: string) {
-  //   return this.accountsService.getTransactionsByMonth(id, month);
-  // }
 }
